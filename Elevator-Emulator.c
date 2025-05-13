@@ -37,6 +37,8 @@ typedef enum {UNDEF_FLOOR = -1, FLOOR_0=0, FLOOR_1=4, FLOOR_2=8, FLOOR_3=12} Ele
 uint32_t time_since_move;
 ElevatorFloor current_position;
 ElevatorFloor destination;
+ElevatorFloor has_traveller;
+
 
 /* Internal Function Declarations */
 
@@ -78,6 +80,10 @@ void initialise_hardware(void) {
 	
 	init_timer0();
 	
+	DDRD2 = 0;
+	DDRA = 0xFF;
+	
+
 	// Turn on global interrupts
 	sei();
 }
@@ -173,11 +179,20 @@ void start_elevator_emulator(void) {
 	
 	current_position = FLOOR_0;
 	destination = FLOOR_0;
+	has_traveller = UNDEF_FLOOR;
+	int SPEED;
 	
 	while(true) {
 		
+		if PIND2 {
+			SPEED = 100;
+		}
+		else {
+			SPEED = 200;
+		}
+		
 		// Only update the elevator every 200 ms
-		if (get_current_time() - time_since_move > 200) {	
+		if (get_current_time() - time_since_move > SPEED) {	
 			
 			// Adjust the elevator based on where it needs to go
 			if (destination - current_position > 0) { // Move up
@@ -188,6 +203,12 @@ void start_elevator_emulator(void) {
 			
 			// As we have potentially changed the elevator position, lets redraw it
 			draw_elevator();
+			if (current_position == has_traveller) {
+				update_square_colour(4, destination + 1, EMPTY_SQUARE);
+			}
+			else if (current_position == FLOOR_0 && has_traveller != UNDEF_FLOOR) {
+				has_traveller = UNDEF_FLOOR;
+			}
 			
 			time_since_move = get_current_time(); // Reset delay until next movement update
 		}
@@ -278,33 +299,48 @@ void handle_inputs(void) {
 	if (btn == BUTTON0_PUSHED || serial_input == '0') {
 		// Move to Floor 0
 		destination = FLOOR_0;
+		
 	} else if(btn == BUTTON1_PUSHED || serial_input == '1') {
 		// Move to Floor 1
 		destination = FLOOR_1;
+		update_square_colour(4, FLOOR_1 + 1);
 	}
 	else if(btn == BUTTON2_PUSHED || serial_input == '2') {
 		// Move to Floor 3
 		destination = FLOOR_2;
+		update_square_colour(4, FLOOR_2 + 1);
 	}
 	else if (btn == BUTTON3_PUSHED || serial_input == '3') {
 		// Move to Floor 4
 		destination = FLOOR_3;
+		update_square_colour(4, FLOOR_3 + 1);
 	}
 	
 	if (serial_input != '-1' || btn != NO_BUTTON_PUSHED) {
 		handle_direction();
 	}
+	
+	//Ensures only 1 traveler is present at max
+	if (has_traveller == UNDEF_FLOOR && btn != NO_BUTTON_PUSHED) {
+		update_square_colour(4, destination + 1);
+		has_traveller = destination;
+	}  
 }
 
 void handle_direction(void) {
 	//Print Floor and Direction 
+	//Show direction on SSD
 	if (destination < current_position) {
 		printf_P(PSTR("Down"));
+		PORTA = 0b00001000;
+			
 	}
 	else if (destination > current_position) {
 		printf_P(PSTR("Up"));
+		PORTA = 0b01000000;
 	}
 	else {
 		printf_P(PSTR("Stationary"));
+		PORTA = 0b00000001;
 	}
 }
