@@ -120,7 +120,55 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="buttons.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="buttons.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="display.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="display.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Elevator-Emulator.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="ledmatrix.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="ledmatrix.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="pixel_colour.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="serialio.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="serialio.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="spi.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="terminalio.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="terminalio.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="timer0.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="timer0.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

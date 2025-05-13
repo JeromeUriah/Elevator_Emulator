@@ -4,7 +4,7 @@
  * Main file
  *
  * Authors: Peter Sutton, Ahmed Baig
- * Modified by <YOUR NAME HERE>
+ * Modified by Jerome Uriah Ng
  */ 
 
 /* Definitions */
